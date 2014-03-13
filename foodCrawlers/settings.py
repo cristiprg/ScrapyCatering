@@ -10,7 +10,8 @@ BOT_NAME = 'foodCrawlers'
 
 SPIDER_MODULES = ['foodCrawlers.spiders']
 NEWSPIDER_MODULE = 'foodCrawlers.spiders'
-ITEM_PIPELINES = [ 'foodCrawlers.pipelines.FoodcrawlersPipeline', 'foodCrawlers.pipelines.XmlExportPipeline' ]
+#ITEM_PIPELINES = [ 'foodCrawlers.pipelines.FoodcrawlersPipeline', 'foodCrawlers.pipelines.XmlExportPipeline' ]
+ITEM_PIPELINES = [ 'foodCrawlers.pipelines.XmlExportPipeline' ]
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'foodCrawlers (+http://www.yourdomain.com)'

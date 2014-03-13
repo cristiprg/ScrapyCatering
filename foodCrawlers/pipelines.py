@@ -6,6 +6,7 @@
 from scrapy.exceptions import DropItem
 from scrapy.contrib.exporter import XmlItemExporter
 from scrapy import signals
+from FoodXmlItemExporter import FoodXmlItemExporter
 
 class FoodcrawlersPipeline(object):
 
@@ -13,12 +14,15 @@ class FoodcrawlersPipeline(object):
 		self.allSpiceCateringPossibleCategories = ['heartybreakfast', 'centerpieceentreesalads', 'casualluncheon', 'sandwicheslunchboxes', 'enticingentrees', 'hotentrees', 'vegetarianmenu', 'soupschili', 'hotcoldappetizers', 'temptingdesserts']
 
 	def process_item(self, item, spider):
+	
 		if spider.name == 'allSpiceCatering':
 			if not item['foodName']:
 				raise DropItem("Missing foodName in %s" % item)
 			if not item['category'] in self.allSpiceCateringPossibleCategories:
 				raise DropItem("Invalid category in %s" % item)
+	
 		return item
+	
 
 class XmlExportPipeline(object):
 
@@ -35,7 +39,7 @@ class XmlExportPipeline(object):
 	def spider_opened(self, spider):
 		file = open('%s_products.xml' % spider.name, 'w+b')
 		self.files[spider] = file
-		self.exporter = XmlItemExporter(file)
+		self.exporter = FoodXmlItemExporter(file)
 		self.exporter.start_exporting()
 
 	def spider_closed(self, spider):
