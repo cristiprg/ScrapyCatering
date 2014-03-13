@@ -7,6 +7,7 @@ from foodCrawlers.foodItem import foodItem
 import os
 import unicodedata
 from scrapy.item import Item, Field
+from foodCrawlers.checker import checkAndExtract
 
 class AllspicecateringSpider(CrawlSpider):
 	name = 'allSpiceCatering'
@@ -31,34 +32,25 @@ class AllspicecateringSpider(CrawlSpider):
 		foodItemArray = []
 		for paragraph in paragraphs:
 			paragraphSelector = HtmlXPathSelector(text=paragraph)
-			foodName = paragraphSelector.select('//p/font[@size="4"]/text()').extract()
-			
-			# if there is no proper food title we skip this item 
-			if foodName == []:
-				continue
-				
-			foodNameUnicode = foodName[0].replace( '\r\n', '' )
-			foodNameString = unicodedata.normalize( 'NFKD', foodNameUnicode ).encode( 'ascii', 'ignore' )
-			
+
+			foodNameString = checkAndExtract( paragraphSelector, '//p/font[@size="4"]/text()' )
+					
 			# if we get an empty string we skip this item
 			if( foodNameString == "" ):
 				continue
 			
 			#TODO1: consult the ontology to determine whether foodNameString is valid or not
 			
-			foodIngredientsAndPrice = paragraphSelector.select( '//p/text()')
 			
 			#select food ingredients
-			foodIngredients = foodIngredientsAndPrice.extract()
-			if foodIngredients == []:
-				continue			
-			foodIngredientsUnicode = foodIngredients[0].replace( '\r\n', '' )
-			foodIngredientsString = unicodedata.normalize( 'NFKD', foodIngredientsUnicode ).encode( 'ascii', 'ignore' )
+			foodIngredientsString = checkAndExtract( paragraphSelector, '//p/text()' )
+			
 			
 			
 			#TODO1: consult the ontology to determine whether foodIngredientsString is valid or not
 			
 			#select food price
+			foodIngredientsAndPrice = paragraphSelector.select( '//p/text()')
 			foodPrice = foodIngredientsAndPrice.re('\$[-+]?[0-9]*\.?[0-9]+$')
 			if foodPrice == []:
 				continue
