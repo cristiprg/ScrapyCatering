@@ -29,7 +29,6 @@ class AllspicecateringSpider(CrawlSpider):
 		paragraphs = hxs.select('//div[@class="blockbody"]//p').extract()
 		
 		#for each paragraph, extract the foodItem
-		foodItemArray = []
 		for paragraph in paragraphs:
 			paragraphSelector = HtmlXPathSelector(text=paragraph)
 
@@ -58,18 +57,11 @@ class AllspicecateringSpider(CrawlSpider):
 			foodPriceString = unicodedata.normalize( 'NFKD', foodPriceUnicode ).encode( 'ascii', 'ignore' )
 			
 			
-			
-			
 			fI = foodItem(foodNameString, category, foodIngredientsString, foodPriceString)
-			foodItemArray.append(fI)
 			
-			#TODO2: find a way to pass fI to item pipeline
 
 			item['stuff'][foodNameString] = fI
 			
-			#fI.display()
-			
-			#print "---", "Food ingredients: ", foodIngredientsAndPrice[0]
 			
 					
 		
