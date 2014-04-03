@@ -14,20 +14,32 @@ class ThecapitalgrilleSpider(CrawlSpider):
 	start_urls = ['http://www.thecapitalgrille.com/']
 
 	rules = (
-		Rule(SgmlLinkExtractor(), callback='parse_item', follow=True),
+		Rule(SgmlLinkExtractor( allow=(".*/menu/.*") ), callback='parse_item', follow=True), #allow more
 	)
 
 	def parse_item(self, response):
-		print response.url
-#		hxs = HtmlXPathSelector(response)
-#		item = FoodcrawlersItem()
-#		item['stuff'] = {}
-
-#		category = string.split(string.split(response.url, '/')[-1], '.')[0] #the last part of the url, without ".html"\
+		hxs = HtmlXPathSelector(response)
+		item = FoodcrawlersItem()
+		item['itemArray'] = {}
 		
-		#extract the whole paragraph which contains all foods
-#		paragraphs = hxs.select('//ul/li/h4/text()').extract()
-#		return item		
+		#extract the whole paragraph which contains all food names and that description which we'll consider ingredients
+		paragraphs = hxs.select('//ul[@class="appetizers"]/li').extract()
+		
+		for paragraph in paragraphs:
+			paragraphSelector = HtmlXPathSelector(text=paragraph)
+			
+			foodNameString = checkAndExtract( paragraphSelector, '//h4/text()' )
+			if foodNameString == "" :
+				continue		
+			
+			ingredientsString = checkAndExtract( paragraphSelector, '//p/text()' )
+			if ingredientsString == "" :
+				continue
+			
+			fI = foodItem(foodName=foodNameString, ingredients=ingredientsString, category=None, price=None)
+			item['itemArray'][foodNameString] = fI
+			
+		return item
 """		
 		#for each paragraph, extract the foodItem
 		foodItemArray = []

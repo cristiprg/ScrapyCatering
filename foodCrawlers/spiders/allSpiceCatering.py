@@ -21,7 +21,7 @@ class AllspicecateringSpider(CrawlSpider):
 	def parse_item(self, response):
 		hxs = HtmlXPathSelector(response)
 		item = FoodcrawlersItem()
-		item['stuff'] = {}
+		item['itemArray'] = {}
 		category = string.split(string.split(response.url, '/')[-1], '.')[0] #the last part of the url, without ".html"\
 		
 		#extract the whole paragraph which contains all the information grouped: title, ingredients, price
@@ -60,7 +60,7 @@ class AllspicecateringSpider(CrawlSpider):
 			fI = foodItem(foodNameString, category, foodIngredientsString, foodPriceString)
 			
 
-			item['stuff'][foodNameString] = fI
+			item['itemArray'][foodNameString] = fI
 			
 			
 					

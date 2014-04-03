@@ -6,4 +6,4 @@
 from scrapy.item import Item, Field
 
 class FoodcrawlersItem(Item):
-	stuff = Field()
+	itemArray = Field()
