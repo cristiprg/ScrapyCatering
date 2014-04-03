@@ -1,14 +1,14 @@
-from scrapy.spider import BaseSpider
-from scrapy.contrib.spiders import CrawlSpider, Rule
-from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 from scrapy.selector import HtmlXPathSelector
+from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
+from scrapy.contrib.spiders import CrawlSpider, Rule
+from scrapy.item import Item, Field
 
 from foodCrawlers.items import FoodcrawlersItem
-from foodCrawlers.checker import checkAndExtract
+from foodCrawlers.utils import checkAndExtract
 from foodCrawlers.foodItem import foodItem
 
-import string
 import unicodedata
+import string
 
 class PickleBarrelCatering(CrawlSpider):
 	name = 'pickleBarrelCatering'

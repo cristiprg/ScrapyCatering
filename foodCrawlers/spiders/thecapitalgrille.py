@@ -1,12 +1,14 @@
 from scrapy.selector import HtmlXPathSelector
 from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 from scrapy.contrib.spiders import CrawlSpider, Rule
-from foodCrawlers.items import FoodcrawlersItem
-import string
-from foodCrawlers.foodItem import foodItem
-import unicodedata
 from scrapy.item import Item, Field
-from foodCrawlers.checker import checkAndExtract
+
+from foodCrawlers.items import FoodcrawlersItem
+from foodCrawlers.utils import checkAndExtract
+from foodCrawlers.foodItem import foodItem
+
+import unicodedata
+import string
 
 class ThecapitalgrilleSpider(CrawlSpider):
 	name = 'thecapitalgrille'

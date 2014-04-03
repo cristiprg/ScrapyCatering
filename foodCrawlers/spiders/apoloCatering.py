@@ -4,8 +4,8 @@ from scrapy.contrib.spiders import CrawlSpider, Rule
 from scrapy.item import Item, Field
 
 from foodCrawlers.items import FoodcrawlersItem
-from foodCrawlers.checker import checkAndExtract
-from foodCrawlers.checker import unicodeToAscii
+from foodCrawlers.utils import checkAndExtract
+from foodCrawlers.utils import unicodeToAscii
 from foodCrawlers.foodItem import foodItem
 
 import unicodedata
@@ -29,7 +29,9 @@ class ApolloBananaCatering(CrawlSpider):
 		
 		categories = hxs.select( '//div[@class="item-page"]//span[@style="font-size: 12pt;"]/text()' ).extract()
 		
-		category = "Place"
+		if( categories == [] ):
+			categories = hxs.select( '//div[@class="item-page"]//strong/text()' ).extract()
+		
 		
 		categoryStrings = []
 		for i in range(len(categories)):
@@ -37,30 +39,29 @@ class ApolloBananaCatering(CrawlSpider):
 			print categoryStrings[i]
 		
 		# We select the rows
-		rows = hxs.select( '//tbody/tr' ).extract()
+		tableSelectors = hxs.select( '//table' )
+		index = 0;
 		
 		# we parse each row one by one
-		for row in rows:
-			rowSelector = HtmlXPathSelector( text = row )
-			columns = rowSelector.select( '//td/text()' ).extract()
-			for i in range(2):
-				foodNameString = checkAndExtract( rowSelector, '//td/text()', i * items_per_row )
+		for tableSel in tableSelectors:
+			tableEntries = tableSel.select( '//td/text()' ).extract()
+			numberOfRows = len( tableEntries ) / items_per_row
+			for i in range(numberOfRows):
+				foodNameString = checkAndExtract( tableSel, '//td/text()', i * items_per_row + 1 )
 				
 				if( foodNameString == "" ):
 					continue
 					
-				foodIngredientsString = checkAndExtract( rowSelector, '//td/text()', i * items_per_row + 1 )
+				foodIngredientsString = None
 				
-				if( foodIngredientsString == "" ):
-					continue
-					
-				foodPriceString = checkAndExtract( rowSelector, '//td/text()', i * items_per_row + 2 )
+				foodPriceString = checkAndExtract( tableSel, '//td/text()', i * items_per_row + 2 )
 				
 				if( foodPriceString == "" ):
 					continue
 				
-				fI = foodItem( foodNameString, category, foodIngredientsString, foodPriceString )
+				fI = foodItem( foodNameString, categoryStrings[index], foodIngredientsString, foodPriceString )
 				item['itemArray'][foodNameString] = fI
+			index += 1
 				
 				
 		return item

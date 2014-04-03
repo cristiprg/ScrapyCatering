@@ -4,7 +4,7 @@ from scrapy.contrib.spiders import CrawlSpider, Rule
 from scrapy.item import Item, Field
 
 from foodCrawlers.items import FoodcrawlersItem
-from foodCrawlers.checker import checkAndExtract
+from foodCrawlers.utils import checkAndExtract
 from foodCrawlers.foodItem import foodItem
 
 import unicodedata
