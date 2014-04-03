@@ -8,20 +8,34 @@ import string
 	Also this method converts the string from unicode to ASCII.
 
 """
-def checkAndExtract( selector, regExp ):
+def checkAndExtract( selector, regExp, index = 0 ):
 	selectedSet = selector.select( regExp ).extract()
 	
 	# We don't have to continue
 	if selectedSet == []:
 		return ""
 		
+		
+	if( index >= len(selectedSet) ):
+		return ""	
+		
 	# We get rid of the empty spaces
-	resultUnicode = selectedSet[0].replace( '\n', '' ).replace( '\r', '' )
+	resultUnicode = selectedSet[index].replace( '\n', '' ).replace( '\r', '' )
 	
-	result = unicodedata.normalize( 'NFKD', resultUnicode ).encode( 'ascii', 'ignore' )
+	result = unicodeToAscii( resultUnicode )
 	
 	# Checks if there are only spaces in the string
 	if( result.isspace() ):
 		return ""
 	
+	return result
+	
+	
+
+def unicodeToAscii( unicodeString ):
+	result = unicodedata.normalize( 'NFKD', unicodeString ).encode( 'ascii', 'ignore' )
+	
+	if ( result.isspace() ):
+		return ""
+		
 	return result

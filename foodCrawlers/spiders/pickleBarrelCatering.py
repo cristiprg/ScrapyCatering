@@ -21,9 +21,10 @@ class PickleBarrelCatering(CrawlSpider):
 	)
 	
 	def parse_item( self, response ):
+		print "Hello"
 		hxs = HtmlXPathSelector( response )
 		item = FoodcrawlersItem()
-		item['stuff'] = {}
+		item['itemArray'] = {}
 		
 		# The category is the last part of the URL without the ".html"
 		category = string.split( string.split( response.url, '/' )[-1], '.' )[0]
@@ -54,7 +55,7 @@ class PickleBarrelCatering(CrawlSpider):
 			foodPriceString = checkAndExtract( paragraphSelector, '//span[@class="price"]/text()' )
 			
 			fI = foodItem( foodNameString, category, foodIngredientsString, foodPriceString )
-			item['stuff'][foodNameString] = fI
+			item['itemArray'][foodNameString] = fI
 			
 		
 		
