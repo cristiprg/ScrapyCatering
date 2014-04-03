@@ -11,10 +11,10 @@ class FoodXmlItemExporter(XmlItemExporter):
 			self._export_xml_field(name, value)
         #self.xg.endElement(self.item_element)
 		
-	def _export_xml_field(self, name, serialized_value):		
+	def _export_xml_field(self, name, serialized_value):
 		for key, value in serialized_value.iteritems():
 			self.xg.startElement(self.item_element, {})
-			
+
 			self.xg.startElement("foodName", {})
 			self.xg.characters(value.foodName)
 			self.xg.endElement("foodName")
@@ -26,9 +26,9 @@ class FoodXmlItemExporter(XmlItemExporter):
 			self.xg.startElement("price", {})
 			self.xg.characters(value.price)
 			self.xg.endElement("price")
-			
+
 			self.xg.startElement("category", {})
 			self.xg.characters(value.category)
 			self.xg.endElement("category")
 			
-			self.xg.endElement(self.item_element)		
+			self.xg.endElement(self.item_element)
